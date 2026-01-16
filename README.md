@@ -448,18 +448,10 @@ Body: {
 }
 ```
 
-## 📄 Licencia
-
-Este proyecto fue desarrollado como parte de un proyecto académico.
-
----
-
-**Desarrollado por:** Daniel Padilla  
-**Institución:** Instituto Sudamericano  
-**Fecha:** Octubre 2025
-
 
 # sistemaUniversitario
-#   s i s t e m a u n i v e r s i t a r i o 1  
- #   S i s t e m a _ U n i _ T 1 _ m 2  
+#   s i s t e m a u n i v e r s i t a r i o 1 
+ 
+ #   S i s t e m a _ U n i _ T 1 _ m 2 
+ 
  
