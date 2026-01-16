@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client-academic"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_ACADEMIC_URL")
+}
+
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  HOURLY
+}
+
+// Note: User relation is logical via userId, not a DB foreign key
+
+model Specialty {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  careers     Career[]
+
+  @@map("specialties")
+}
+
+model Career {
+  id            Int       @id @default(autoincrement())
+  name          String    @unique
+  totalCycles   Int       @map("total_cycles")
+  durationYears Int       @map("duration_years")
+  specialtyId   Int       @map("specialty_id")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  specialty     Specialty @relation(fields: [specialtyId], references: [id], onDelete: Cascade)
+  students      Student[]
+  subjects      Subject[]
+
+  @@index([specialtyId])
+  @@map("careers")
+}
+
+model Cycle {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  number    Int       @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  subjects  Subject[]
+
+  @@map("cycles")
+}
+
+model Subject {
+  id              Int              @id @default(autoincrement())
+  name            String
+  credits         Int
+  maxQuota        Int              @default(30) @map("max_quota")
+  availableQuota  Int              @default(30) @map("available_quota")
+  careerId        Int              @map("career_id")
+  cycleId         Int              @map("cycle_id")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  career          Career           @relation(fields: [careerId], references: [id], onDelete: Cascade)
+  cycle           Cycle            @relation(fields: [cycleId], references: [id], onDelete: Cascade)
+  students        StudentSubject[]
+  teachers        TeacherSubject[]
+  enrollments     Enrollment[]
+
+  @@unique([careerId, cycleId, name])
+  @@index([careerId])
+  @@index([cycleId])
+  @@map("subjects")
+}
+
+model Teacher {
+  id             Int              @id @default(autoincrement())
+  userId         Int              @unique @map("user_id") // Link to Auth DB User.id
+  firstName      String           @map("first_name")
+  lastName       String           @map("last_name")
+  email          String           @unique
+  phone          String?
+  isActive       Boolean          @default(true) @map("is_active")
+  employmentType EmploymentType   @default(FULL_TIME) @map("employment_type")
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  subjects       TeacherSubject[]
+
+  @@map("teachers")
+}
+
+model TeacherSubject {
+  id        Int      @id @default(autoincrement())
+  teacherId Int      @map("teacher_id")
+  subjectId Int      @map("subject_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@unique([teacherId, subjectId])
+  @@index([teacherId])
+  @@index([subjectId])
+  @@map("teacher_subjects")
+}
+
+model Student {
+  id          Int              @id @default(autoincrement())
+  userId      Int              @unique @map("user_id") // Link to Auth DB User.id
+  firstName   String           @map("first_name")
+  lastName    String           @map("last_name")
+  email       String           @unique
+  phone       String?
+  isActive    Boolean          @default(true) @map("is_active")
+  careerId    Int              @map("career_id")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+  career      Career           @relation(fields: [careerId], references: [id], onDelete: Cascade)
+  subjects    StudentSubject[]
+  enrollments Enrollment[]
+
+  @@index([careerId])
+  @@map("students")
+}
+
+model StudentSubject {
+  id        Int      @id @default(autoincrement())
+  studentId Int      @map("student_id")
+  subjectId Int      @map("subject_id")
+  grade     Float?
+  passed    Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, subjectId])
+  @@index([studentId])
+  @@index([subjectId])
+  @@map("student_subjects")
+}
+
+model AcademicPeriod {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique // e.g., "2026-1", "2026-2"
+  startDate   DateTime     @map("start_date")
+  endDate     DateTime     @map("end_date")
+  isActive    Boolean      @default(false) @map("is_active")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  enrollments Enrollment[]
+
+  @@map("academic_periods")
+}
+
+model Enrollment {
+  id               Int            @id @default(autoincrement())
+  studentId        Int            @map("student_id")
+  subjectId        Int            @map("subject_id")
+  academicPeriodId Int            @map("academic_period_id")
+  enrolledAt       DateTime       @default(now()) @map("enrolled_at")
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+  student          Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  subject          Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  academicPeriod   AcademicPeriod @relation(fields: [academicPeriodId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, subjectId, academicPeriodId])
+  @@index([studentId])
+  @@index([subjectId])
+  @@index([academicPeriodId])
+  @@map("enrollments")
+}
+

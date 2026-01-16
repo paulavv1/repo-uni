@@ -1,0 +1,284 @@
+{
+  "info": {
+    "name": "Sistema Universitario - CLASE 3 COMPLETO",
+    "_postman_id": "clase3-completo-funcional",
+    "description": "Coleccion completa y funcional para Actividad Practica CLASE 3. Ejecutar en orden para mejores resultados.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "PASO 1 - Configuracion Inicial",
+      "description": "// Esta carpeta se ejecuta primero para configurar el sistema y verificar datos existentes en la base de datos",
+      "item": [
+        {
+          "name": "1.1 Crear Periodo Academico Activo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"2026-1\",\n  \"startDate\": \"2026-03-01T00:00:00.000Z\",\n  \"endDate\": \"2026-07-31T23:59:59.000Z\",\n  \"isActive\": true\n}"
+            },
+            "url": "http://localhost:3000/academic-periods"
+          }
+        },
+        {
+          "name": "1.2 Verificar Periodos Activos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/academic-periods/active"
+          }
+        },
+        {
+          "name": "1.3 Ver Estudiantes Disponibles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/students"
+          }
+        },
+        {
+          "name": "1.4 Ver Carreras Disponibles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/careers"
+          }
+        },
+        {
+          "name": "1.5 Ver Materias Disponibles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/subjects"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PASO 2 - PARTE 1 (Consultas Derivadas ORM)",
+      "description": "// Ejecutar estos 4 endpoints para demostrar consultas derivadas con Prisma ORM. Parte 1 de la actividad practica.",
+      "item": [
+        {
+          "name": "2.1.A Estudiantes Activos con Carrera",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/students/active-with-career",
+            "description": "Retorna estudiantes activos con su carrera y especialidad"
+          }
+        },
+        {
+          "name": "2.1.B Materias de una Carrera",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/subjects/by-career/1",
+            "description": "Retorna todas las materias de una carrera especifica"
+          }
+        },
+        {
+          "name": "2.1.C Docentes con 2+ Materias",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/teachers/multiple-subjects",
+            "description": "Retorna docentes que imparten 2 o mas asignaturas"
+          }
+        },
+        {
+          "name": "2.1.D Matriculas por Estudiante y Periodo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/enrollments/student/1/period/1",
+            "description": "Retorna matriculas de un estudiante en un periodo academico"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PASO 3 - PARTE 2 (Operadores Logicos)",
+      "description": "// Ejecutar estos 2 endpoints para demostrar operadores logicos AND, OR, NOT en consultas Prisma. Parte 2 de la actividad practica.",
+      "item": [
+        {
+          "name": "3.2.E Filtrar Estudiantes (AND)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/students/filter?careerId=1&periodId=1",
+            "description": "Filtra estudiantes activos de una carrera con matriculas en un periodo usando operador AND"
+          }
+        },
+        {
+          "name": "3.2.F Filtrar Docentes (AND/OR/NOT)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/teachers/filter-complex",
+            "description": "Filtra docentes tiempo completo que ensenan O estan activos usando operadores AND, OR, NOT"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PASO 4 - PARTE 3 (SQL Nativa)",
+      "description": "// Ejecutar este endpoint para demostrar consulta SQL nativa con $queryRaw. Parte 3 de la actividad practica.",
+      "item": [
+        {
+          "name": "4.3.G Reporte SQL Nativo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/enrollments/report",
+            "description": "Genera reporte con SQL nativo usando $queryRaw de Prisma"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PASO 5 - PARTE 4 (Transaccion ACID)",
+      "description": "// Ejecutar estos endpoints para demostrar transaccion ACID completa. Parte 4 de la actividad practica con control de concurrencia.",
+      "item": [
+        {
+          "name": "5.4.H Matricular Estudiante (TRANSACCION ACID)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1,\n  \"subjectId\": 1,\n  \"academicPeriodId\": 1\n}"
+            },
+            "url": "http://localhost:3000/enrollments",
+            "description": "Matricula estudiante con transaccion ACID: Atomicidad, Consistencia, Aislamiento, Durabilidad"
+          }
+        },
+        {
+          "name": "5.4.I Verificar Matricula Creada",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/enrollments",
+            "description": "Lista todas las matriculas para verificar la creacion exitosa"
+          }
+        },
+        {
+          "name": "5.4.J Intentar Matricula Duplicada (Debe Fallar)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1,\n  \"subjectId\": 1,\n  \"academicPeriodId\": 1\n}"
+            },
+            "url": "http://localhost:3000/enrollments",
+            "description": "Intenta matricular al mismo estudiante nuevamente. Debe retornar error 409 Conflict"
+          }
+        }
+      ]
+    },
+    {
+      "name": "PASO 6 - Verificacion de Todas las Partes",
+      "description": "// Ejecutar estos endpoints al final para verificar que todas las operaciones funcionaron correctamente",
+      "item": [
+        {
+          "name": "6.1 Listar Todos los Estudiantes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/students"
+          }
+        },
+        {
+          "name": "6.2 Listar Todos los Docentes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/teachers"
+          }
+        },
+        {
+          "name": "6.3 Listar Todas las Materias",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/subjects"
+          }
+        },
+        {
+          "name": "6.4 Listar Todas las Matriculas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/enrollments"
+          }
+        },
+        {
+          "name": "6.5 Listar Todos los Periodos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/academic-periods"
+          }
+        }
+      ]
+    },
+    {
+      "name": "EXTRA - Gestion de Matriculas",
+      "description": "// Endpoints adicionales para gestionar matriculas: cancelar, ver detalle, matricular en otras materias",
+      "item": [
+        {
+          "name": "Cancelar Matricula (Devuelve Cupo)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "http://localhost:3000/enrollments/1",
+            "description": "Elimina una matricula y devuelve el cupo a la materia automaticamente"
+          }
+        },
+        {
+          "name": "Ver Detalle de Matricula",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "http://localhost:3000/enrollments/1"
+          }
+        },
+        {
+          "name": "Matricular en Otra Materia",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1,\n  \"subjectId\": 2,\n  \"academicPeriodId\": 1\n}"
+            },
+            "url": "http://localhost:3000/enrollments",
+            "description": "Matricula al mismo estudiante en otra materia diferente"
+          }
+        }
+      ]
+    }
+  ]
+}

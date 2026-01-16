@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client-support"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_SUPPORT_URL")
+}
+
+
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?     @map("user_id") // Nullable if system action or unauthenticated
+  action    String
+  resource  String
+  details   Json?
+  ipAddress String?  @map("ip_address")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model SystemLog {
+  id        Int      @id @default(autoincrement())
+  level     String   // INFO, WARN, ERROR
+  message   String   @db.Text
+  context   String?
+  stack     String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([level])
+  @@index([createdAt])
+  @@map("system_logs")
+}
