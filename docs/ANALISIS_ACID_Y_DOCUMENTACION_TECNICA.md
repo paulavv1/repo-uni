@@ -4,7 +4,7 @@
 **Desarrollado por:** Paula Verdugo  
 **Institución:** Instituto Sudamericano  
 **Fecha:** Enero 21 2026  
-**Asignatura:** Consultas, Operaciones Lógicas y Transacciones en NestJS
+**Asignatura:** Herramientas informaticas para el despliqgue de diagramas
 
 ---
 
@@ -40,13 +40,13 @@ El proyecto gestiona:
 
 ## ANÁLISIS DE PRINCIPIOS ACID
 
-### 1. ATOMICIDAD (Atomicity)
+### 1. ATOMICIDAD EN LA MATRICULACIÓN
 
-**Definición:** Garantiza que una transacción se ejecuta completamente o no se ejecuta en absoluto (todo o nada).
+**¿Cómo se aplica?**
 
-**Implementación en el Sistema:**
+La atomicidad en la matriculación se implementa mediante transacciones explícitas en **`src/enrollment/enrollment.service.ts`** (línea 22) usando `$transaction()` de Prisma. Esto garantiza que el proceso de matriculación es **TODO O NADA**:
 
-En el archivo **`src/enrollment/enrollment.service.ts`** (líneas 21-152), la función `enrollStudent()` implementa la atomicidad mediante:
+**Código Implementado:**
 
 ```typescript
 async enrollStudent(createEnrollmentDto: CreateEnrollmentDto) {
@@ -71,130 +71,99 @@ async enrollStudent(createEnrollmentDto: CreateEnrollmentDto) {
 }
 ```
 
-**Garantía de Atomicidad:**
-- ✅ Usa `$transaction()` de Prisma que envuelve todas las operaciones
-- ✅ Si el estudiante no existe → Se revierte todo
-- ✅ Si la materia no existe → Se revierte todo
-- ✅ Si no hay cupos → Se revierte todo
-- ✅ Si falla la creación de matrícula → Se revierte el decremento de cupos
-- ✅ Si falla en medio de la transacción → Rollback automático
+**Importancia Práctica:**
 
-**Ejemplo de fallos capturados:**
-```
-1. Estudiante inactivo → BadRequestException → ROLLBACK
-2. Sin cupos disponibles → BadRequestException → ROLLBACK
-3. Matrícula duplicada → ConflictException → ROLLBACK
-4. Período académico inactivo → BadRequestException → ROLLBACK
-```
+En un sistema universitario, la atomicidad es **crítica** porque:
+- Si un estudiante se matricula pero el cupo NO se decrementa → Inconsistencia total
+- Si el cupo se decrementa pero la matrícula falla → Cupo perdido injustamente
+- **Solución:** La transacción garantiza que AMBAS operaciones ocurren juntas o NINGUNA
+
+**Operaciones Atómicas en Transacción:**
+1. Validar que el estudiante existe y está activo
+2. Validar que la materia existe y tiene cupos
+3. Verificar que el período académico está activo
+4. Decrementar cupo disponible (UPDATE atómico)
+5. Crear registro de matrícula
+
+**Si alguno falla → ROLLBACK completo → Base de datos intacta**
 
 ---
 
-### 2. CONSISTENCIA (Consistency)
+### 2. CONSISTENCIA DE DATOS
 
-**Definición:** Garantiza que la base de datos transita de un estado válido a otro estado válido, respetando todas las reglas y restricciones.
+**¿Qué garantiza?**
 
-**Implementación en el Sistema:**
+La consistencia se implementa en múltiples niveles en **`src/enrollment/enrollment.service.ts`** (líneas 30-99). Garantiza que la base de datos SIEMPRE está en un estado válido:
 
-En **`src/enrollment/enrollment.service.ts`** se implementan múltiples capas de validación (líneas 30-99):
+**Capas de Validación Implementadas:**
 
-```typescript
-// CAPA 1: Validación de Estudiante
-const student = await prisma.student.findUnique({
-  where: { id: createEnrollmentDto.studentId }
-});
-if (!student) throw new NotFoundException(...);
-if (!student.isActive) throw new BadRequestException(
-  `Student is not active`
-);
+| Capa | Validación | Impacto |
+|------|-----------|---------|
+| 1 | Estudiante existe y está activo | No permite matricular inactivos |
+| 2 | Materia existe con cupos > 0 | No permite sobrematriculación |
+| 3 | Período académico existe y activo | No permite matricular fuera de período |
+| 4 | Constraint UNIQUE (estudiante-materia-período) | No permite duplicados |
+| 5 | availableQuota nunca negativo | Integridad referencial |
 
-// CAPA 2: Validación de Materia
-const subject = await prisma.subject.findUnique({
-  where: { id: createEnrollmentDto.subjectId }
-});
-if (!subject) throw new NotFoundException(...);
-if (subject.availableQuota <= 0) throw new BadRequestException(
-  `No available quota`
-);
-
-// CAPA 3: Validación de Período Académico
-const academicPeriod = await prisma.academicPeriod.findUnique({
-  where: { id: createEnrollmentDto.academicPeriodId }
-});
-if (!academicPeriod.isActive) throw new BadRequestException(
-  `Academic period is not active`
-);
-
-// CAPA 4: Prevención de Duplicados
-const existingEnrollment = await prisma.enrollment.findUnique({
-  where: {
-    studentId_subjectId_academicPeriodId: {
-      studentId: ...,
-      subjectId: ...,
-      academicPeriodId: ...
-    }
-  }
-});
-if (existingEnrollment) throw new ConflictException(...);
-```
-
-**Restricciones de Consistencia Implementadas:**
-- ✅ Constraint UNIQUE compuesto: `(studentId, subjectId, academicPeriodId)`
-- ✅ Estudiante debe existir y estar activo
-- ✅ Materia debe existir con cupos disponibles
-- ✅ Período académico debe existir y estar activo
-- ✅ No pueden existir matrículas duplicadas
-- ✅ Los cupos no pueden ser negativos (validación en schema)
-
-**Definición en Schema Prisma (`prisma/schema-academic.prisma`):**
+**Restricción de Consistencia en BD (schema-academic.prisma):**
 ```prisma
-model Enrollment {
-  id                  Int      @id @default(autoincrement())
-  studentId           Int
-  subjectId           Int
-  academicPeriodId    Int
-  enrolledAt          DateTime @default(now())
-  
-  student             Student @relation(fields: [studentId], references: [id])
-  subject             Subject @relation(fields: [subjectId], references: [id])
-  academicPeriod      AcademicPeriod @relation(fields: [academicPeriodId], references: [id])
-  
-  // Garantiza que no hay matrículas duplicadas
-  @@unique([studentId, subjectId, academicPeriodId])
-}
+@@unique([studentId, subjectId, academicPeriodId])  ← Previene duplicados
+availableQuota Int @default(0)                     ← No puede ser negativo
+```
 
-model Subject {
-  ...
-  availableQuota      Int      @default(0) // No puede ser negativo por validación
-  ...
-}
+**Estado Inicial vs Final Válido:**
+```
+ANTES:
+- Estudiante: activo ✓
+- Materia: 30 cupos disponibles ✓
+- Período: activo ✓
+
+DESPUÉS:
+- Estudiante: activo ✓ (sin cambios)
+- Materia: 29 cupos disponibles ✓ (decrmentado)
+- Período: activo ✓ (sin cambios)
+- NUEVA matrícula registrada ✓
+
+NUNCA estados como: cupo negativo, matrícula sin decrementar cupo, estudiante inactivo matriculado
 ```
 
 ---
 
-### 3. AISLAMIENTO (Isolation)
+### 3. AISLAMIENTO EN MATRICULACIÓN CONCURRENTE
 
-**Definición:** Garantiza que transacciones concurrentes no interfieran entre sí, evitando problemas de race condition.
+**¿Cómo se maneja cuando varios estudiantes se matriculan simultáneamente?**
 
-**Escenario de Concurrencia:**
-Dos estudiantes intentan matricularse en la última matrícula disponible simultáneamente.
+El aislamiento previene **race conditions** cuando múltiples estudiantes intentan matricularse en la última matrícula disponible. Implementado en **`src/enrollment/enrollment.service.ts`** (líneas 105-130):
 
-**Implementación en el Sistema:**
+**Escenario Real: Última Matrícula Disponible**
 
-En **`src/enrollment/enrollment.service.ts`** (líneas 105-130), el manejo concurrente se implementa mediante:
+```
+Materia XYZ tiene 1 cupo disponible (availableQuota = 1)
+Estudiante A y B intentan matricularse al MISMO TIEMPO
 
+TIEMPO T1:
+Estudiante A: Verifica cupo > 0 ✓
+Estudiante B: Verifica cupo > 0 ✓ (ambos ven 1 cupo)
+
+TIEMPO T2:
+Estudiante A: UPDATE materia SET availableQuota = 0 WHERE id=XYZ AND availableQuota > 0
+               → count = 1 ✓ (afectó 1 fila) → A gana
+Estudiante B: UPDATE materia SET availableQuota = 0 WHERE id=XYZ AND availableQuota > 0
+               → count = 0 ✗ (no afectó filas) → B pierde y recibe excepción
+```
+
+**Código Crítico - Decremento Atómico:**
 ```typescript
-// Decremento atómico con condición WHERE
 const updateResult = await prisma.subject.updateMany({
   where: {
-    id: createEnrollmentDto.subjectId,
-    availableQuota: { gt: 0 }  // ← Solo si hay cupos > 0
+    id: subjectId,
+    availableQuota: { gt: 0 }  // ← CONDICIÓN CRÍTICA
   },
   data: {
-    availableQuota: { decrement: 1 }  // ← Decremento atómico
+    availableQuota: { decrement: 1 }
   }
 });
 
-// Si count = 0, otro proceso tomó el último cupo
 if (updateResult.count === 0) {
   throw new BadRequestException(
     `No available quota (concurrent enrollment)`
@@ -202,112 +171,85 @@ if (updateResult.count === 0) {
 }
 ```
 
-**Cómo funciona:**
+**¿Por qué funciona?**
+- PostgreSQL **ejecuta UPDATE atómicamente** a nivel de BD
+- La condición `availableQuota > 0` forma parte de la operación
+- Solo UNA transacción puede satisfacer la condición cuando quota=1
+- La otra transacción recibe `count=0` y se revierte
 
-**Escenario 1 - Única matrícula disponible:**
-```
-Materia XYZ: availableQuota = 1
+**Problemas Evitados:**
+- ❌ Lost Update: Ambos estudiantes se matriculan (cupo negativo)
+- ❌ Dirty Read: Ver cupos que se restan en otra transacción
+- ❌ Phantom Read: Aparecer/desaparecer de matrículas durante consulta
 
-Tiempo T1: Estudiante A intenta matricularse
-  - Verifica quota > 0 ✓
-  - Ejecuta UPDATE: availableQuota = 0 ✓
-  - count = 1 (una fila afectada) ✓
-  - Crea matrícula de A ✓
-
-Tiempo T1 (mismo): Estudiante B intenta matricularse
-  - Verifica quota > 0 ✓ (pero es asíncrono)
-  - Ejecuta UPDATE donde quota > 0
-  - count = 0 ← Ya no hay cupos (A ganó)
-  - Lanza excepción: ConflictException ✗
-  - Se revierte toda la transacción
-```
-
-**Tabla de Aislamiento implementado:**
-
-| Problema | Solución en el Código | Implementado |
-|----------|----------------------|--------------|
-| Dirty Read | Transacción envuelta | ✅ $transaction() |
-| Non-repeatable Read | Constraint UNIQUE | ✅ Composite index |
-| Phantom Read | Condición WHERE con gt > 0 | ✅ Decremento atómico |
-| Lost Update | Operación atómica UPDATE | ✅ updateMany con count verificación |
-
-**Nivel de Aislamiento PostgreSQL:**
-El sistema usa el nivel de aislamiento `READ_COMMITTED` (predeterminado en PostgreSQL), suficiente para este caso porque:
-- La condición `availableQuota > 0` forma parte de la lógica de negocio
-- Solo una transacción puede satisfacer la condición simultáneamente
 
 ---
 
-### 4. DURABILIDAD (Durability)
+### 4. DURABILIDAD EN SISTEMA UNIVERSITARIO
 
-**Definición:** Una vez que la transacción se confirma, los datos persisten permanentemente, incluso ante fallos del sistema.
+**¿Por qué es importante?**
 
-**Implementación en el Sistema:**
+La durabilidad garantiza que una vez que se confirma una matrícula, **persiste permanentemente** incluso si:
+- El servidor falla
+- La electricidad se va
+- La BD se reinicia
+- Hay corte de internet
 
-PostgreSQL garantiza durabilidad mediante:
+**Implementación: PostgreSQL Write-Ahead Logging (WAL)**
 
-1. **Write-Ahead Logging (WAL)**
-   - Cada cambio se escribe primero en el WAL
-   - Luego se aplica a la base de datos
-   - Si falla el servidor, se recupera desde WAL
-
-2. **Confirmación Explícita**
-   - `$transaction()` en Prisma ejecuta `COMMIT` al finalizar
-   - Si falla dentro de la transacción → `ROLLBACK`
-   - Si falla después → Los datos ya están en disco
-
-**En el Contexto Universitario:**
+En **`src/enrollment/enrollment.service.ts`**, cuando la transacción termina:
 
 ```typescript
-async enrollStudent(createEnrollmentDto: CreateEnrollmentDto) {
+async enrollStudent(...) {
   return this.prismaAcademic.$transaction(async (prisma) => {
-    // ... validaciones ...
+    // ... validaciones y operaciones ...
     
-    // Al llegar aquí, PostgreSQL ejecuta COMMIT
     const enrollment = await prisma.enrollment.create({...});
     return enrollment;
     
-    // COMMIT ejecutado automáticamente por Prisma
-    // Datos guardados permanentemente en disco
+    // ← COMMIT ejecutado automáticamente
+    // ← Datos guardados permanentemente en disco
   });
 }
 ```
 
-**Importancia en Sistema Universitario:**
+**Proceso de Durabilidad:**
+1. PostgreSQL escribe cambios en **WAL (Write-Ahead Log)** en disco
+2. Aplica cambios en la BD
+3. Ejecuta COMMIT (confirmación)
+4. Cambios están **permanentemente guardados**
+
+**Impacto en Universidad:**
 
 ```
-Antes de la matrícula:
-- Carrera: activa
-- Materia: con cupos
-- Estudiante: activo
+ESCENARIO: Matrícula de estudiante en última disponible (1 cupo)
 
-FALLO DEL SERVIDOR EN MEDIO DE TRANSACCIÓN
-↓
-PostgreSQL recupera desde WAL
+FALLO DEL SERVIDOR A MITAD DE TRANSACCIÓN:
+- Si ANTES de COMMIT: Matrícula NO se crea, cupo intacto, rollback automático
+- Si DESPUÉS de COMMIT: Matrícula persiste, cupo decrmentado permanentemente
 
-Después del servidor se reinicia:
-- Si llegó al COMMIT: Matrícula confirmada, cupo descontado
-- Si no llegó al COMMIT: Matrícula NO existe, cupo intacto
-- NUNCA: Estado inconsistente (matrícula sin cupo descontado)
+RESULTADO: Nunca hay estado inconsistente
 ```
 
-**Configuración de Durabilidad:**
+**Ejemplos de Relevancia:**
+- ✅ **Matrícula confirmada**: Estudiante ya está registrado (nadie puede quitarla)
+- ✅ **Cupo decrmentado**: Otro estudiante no puede tomar el mismo cupo
+- ✅ **Récord auditoria**: Se registra quién se matriculó y cuándo
+- ❌ **NUNCA**: "Se procesó la matrícula pero se perdió por fallo del servidor"
 
-En `prisma/schema-academic.prisma`:
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_ACADEMIC_URL")
-  // PostgreSQL maneja automáticamente WAL y durabilidad
-}
-```
+**Garantía en el Código:**
 
-**Garantías Implementadas:**
-- ✅ Transacciones atómicas (todo o nada)
-- ✅ Write-Ahead Logging (WAL)
-- ✅ Checkpoint automático
-- ✅ Replicación opcional para HA
-- ✅ Backups regulares
+El uso de `$transaction()` en Prisma garantiza:
+- Atomicidad + Durabilidad = Matrícula confiable
+- PostgreSQL + WAL = Recuperación ante fallos
+- Backups regulares = Recuperación ante desastres
+
+**Conclusión:** En un sistema universitario, la durabilidad es **CRÍTICA** porque:
+- Las matrículas son legales y permanentes
+- Los estudiantes confían en que su matriculación persiste
+- La auditoría y récords académicos deben ser confiables
+- No puede haber pérdida de datos por fallos técnicos
+
 
 ---
 
