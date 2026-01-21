@@ -1,0 +1,516 @@
+{
+    "info": {
+        "_postman_id": "students-api-collection-2026",
+        "name": "Students API - Sistema Universitario",
+        "description": "Colección completa para probar todos los endpoints de estudiantes del sistema universitario",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Students",
+            "item": [
+                {
+                    "name": "1. Crear Estudiante - Ingeniería de Sistemas",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"userId\": 4,\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"Rodríguez\",\n  \"email\": \"carlos.rodriguez@universidad.edu\",\n  \"phone\": \"987654323\",\n  \"careerId\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:3000/students",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students"
+                            ]
+                        },
+                        "description": "Crea un nuevo estudiante en la carrera de Ingeniería de Sistemas (careerId: 1)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "2. Crear Estudiante - Sin Teléfono",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"userId\": 5,\n  \"firstName\": \"Ana\",\n  \"lastName\": \"Martínez\",\n  \"email\": \"ana.martinez@universidad.edu\",\n  \"careerId\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:3000/students",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students"
+                            ]
+                        },
+                        "description": "Crea un estudiante sin teléfono (campo opcional)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "3. Crear Estudiante - Ingeniería Civil",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"userId\": 6,\n  \"firstName\": \"Luis\",\n  \"lastName\": \"Fernández\",\n  \"email\": \"luis.fernandez@universidad.edu\",\n  \"phone\": \"987654324\",\n  \"careerId\": 2\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:3000/students",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students"
+                            ]
+                        },
+                        "description": "Crea un estudiante en Ingeniería Civil (careerId: 2)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "4. Crear Estudiante - Medicina",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"userId\": 7,\n  \"firstName\": \"Sofía\",\n  \"lastName\": \"González\",\n  \"email\": \"sofia.gonzalez@universidad.edu\",\n  \"phone\": \"987654325\",\n  \"careerId\": 3\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:3000/students",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students"
+                            ]
+                        },
+                        "description": "Crea un estudiante en Medicina (careerId: 3)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "5. Listar Todos los Estudiantes",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:3000/students",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students"
+                            ]
+                        },
+                        "description": "Obtiene todos los estudiantes con paginación por defecto (página 1, límite 10)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "6. Listar Estudiantes - Con Paginación",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:3000/students?page=1&limit=5",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "5"
+                                }
+                            ]
+                        },
+                        "description": "Obtiene estudiantes con paginación personalizada (5 por página)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "7. Obtener Estudiante por ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:3000/students/1",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students",
+                                "1"
+                            ]
+                        },
+                        "description": "Obtiene un estudiante específico por su ID"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "8. Estudiantes Activos con Carrera",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:3000/students/active-with-career",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students",
+                                "active-with-career"
+                            ]
+                        },
+                        "description": "Obtiene todos los estudiantes activos con información completa de su carrera y especialidad"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "9. Filtrar Estudiantes por Carrera y Periodo",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:3000/students/filter?careerId=1&periodId=1",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students",
+                                "filter"
+                            ],
+                            "query": [
+                                {
+                                    "key": "careerId",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "periodId",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "description": "Filtra estudiantes activos por carrera y periodo académico específico"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "10. Actualizar Estudiante - Teléfono",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"phone\": \"999888777\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:3000/students/1",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students",
+                                "1"
+                            ]
+                        },
+                        "description": "Actualiza solo el teléfono de un estudiante"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "11. Actualizar Estudiante - Desactivar",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"isActive\": false\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:3000/students/1",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students",
+                                "1"
+                            ]
+                        },
+                        "description": "Desactiva un estudiante cambiando isActive a false"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "12. Actualizar Estudiante - Múltiples Campos",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"firstName\": \"Juan Carlos\",\n  \"phone\": \"987654999\",\n  \"isActive\": true\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:3000/students/1",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students",
+                                "1"
+                            ]
+                        },
+                        "description": "Actualiza múltiples campos de un estudiante a la vez"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "13. Eliminar Estudiante",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:3000/students/1",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students",
+                                "1"
+                            ]
+                        },
+                        "description": "Elimina un estudiante por su ID"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Endpoints para gestión completa de estudiantes"
+        },
+        {
+            "name": "Casos de Error",
+            "item": [
+                {
+                    "name": "Error - Email Duplicado",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"userId\": 8,\n  \"firstName\": \"Test\",\n  \"lastName\": \"Duplicado\",\n  \"email\": \"juan.perez@universidad.edu\",\n  \"careerId\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:3000/students",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students"
+                            ]
+                        },
+                        "description": "Intenta crear un estudiante con un email que ya existe (debe fallar)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Error - Email Inválido",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"userId\": 9,\n  \"firstName\": \"Test\",\n  \"lastName\": \"Error\",\n  \"email\": \"email-invalido\",\n  \"careerId\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:3000/students",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students"
+                            ]
+                        },
+                        "description": "Intenta crear un estudiante con email inválido (debe fallar validación)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Error - Campos Faltantes",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"firstName\": \"Test\",\n  \"lastName\": \"Incompleto\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:3000/students",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students"
+                            ]
+                        },
+                        "description": "Intenta crear un estudiante sin campos requeridos (debe fallar)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Error - Carrera Inexistente",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"userId\": 10,\n  \"firstName\": \"Test\",\n  \"lastName\": \"Error\",\n  \"email\": \"test.error@universidad.edu\",\n  \"careerId\": 999\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:3000/students",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students"
+                            ]
+                        },
+                        "description": "Intenta crear un estudiante con una carrera que no existe (debe fallar)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Error - Estudiante No Encontrado",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:3000/students/9999",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "students",
+                                "9999"
+                            ]
+                        },
+                        "description": "Intenta obtener un estudiante con ID inexistente (debe retornar 404)"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Casos de prueba para validar manejo de errores"
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:3000",
+            "type": "string"
+        }
+    ]
+}

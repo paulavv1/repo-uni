@@ -1,0 +1,1479 @@
+{
+    "info": {
+        "_postman_id": "complete-sistema-universitario-2026",
+        "name": "Sistema Universitario - API Completa",
+        "description": "Colección completa con TODOS los endpoints del sistema universitario - Auth, Users, Specialties, Careers, Cycles, Subjects, Teachers, Students, Teacher-Subjects, Student-Subjects, Enrollments, Academic Periods",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "🔐 Authentication",
+            "item": [
+                {
+                    "name": "Register",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Pedro López\",\n  \"username\": \"plopez\",\n  \"email\": \"pedro.lopez@universidad.edu\",\n  \"password\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/register",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "register"
+                            ]
+                        },
+                        "description": "Registra un nuevo usuario en el sistema"
+                    }
+                },
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"admin@universidad.edu\",\n  \"password\": \"admin123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "login"
+                            ]
+                        },
+                        "description": "Inicia sesión y obtiene un token JWT"
+                    }
+                },
+                {
+                    "name": "Get Current User (Protected)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{access_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/me",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "me"
+                            ]
+                        },
+                        "description": "Obtiene información del usuario autenticado (requiere token)"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "👤 Users",
+            "item": [
+                {
+                    "name": "Create User",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Roberto Sánchez\",\n  \"email\": \"roberto.sanchez@universidad.edu\",\n  \"username\": \"rsanchez\",\n  \"password\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/users",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Users",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/users?page=1&limit=10",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get User by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/users/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update User",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Roberto Sánchez Updated\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/users/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete User",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{base_url}}/users/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "users",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "🎓 Specialties",
+            "item": [
+                {
+                    "name": "Create Specialty",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Ciencias Sociales\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/specialties",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "specialties"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Specialties",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/specialties",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "specialties"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Specialty by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/specialties/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "specialties",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Specialty",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Ingeniería Actualizada\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/specialties/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "specialties",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Specialty",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{base_url}}/specialties/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "specialties",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "📚 Careers",
+            "item": [
+                {
+                    "name": "Create Career",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Ingeniería Industrial\",\n  \"totalCycles\": 10,\n  \"durationYears\": 5,\n  \"specialtyId\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/careers",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "careers"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Careers",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/careers",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "careers"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Career by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/careers/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "careers",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Career",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"totalCycles\": 12\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/careers/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "careers",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Career",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{base_url}}/careers/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "careers",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "🔄 Cycles",
+            "item": [
+                {
+                    "name": "Create Cycle",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Ciclo 13\",\n  \"number\": 13\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/cycles",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "cycles"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Cycles",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/cycles",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "cycles"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Cycle by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/cycles/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "cycles",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Cycle",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Primer Ciclo\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/cycles/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "cycles",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Cycle",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{base_url}}/cycles/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "cycles",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "📖 Subjects",
+            "item": [
+                {
+                    "name": "Create Subject",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Algoritmos y Estructuras de Datos\",\n  \"credits\": 5,\n  \"careerId\": 1,\n  \"cycleId\": 2\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/subjects",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "subjects"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Subjects",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/subjects",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "subjects"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Subjects by Career",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/subjects/by-career/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "subjects",
+                                "by-career",
+                                "1"
+                            ]
+                        },
+                        "description": "Obtiene todas las materias de una carrera específica"
+                    }
+                },
+                {
+                    "name": "Get Subject by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/subjects/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "subjects",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Subject",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"credits\": 6\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/subjects/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "subjects",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Subject",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{base_url}}/subjects/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "subjects",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "👨‍🏫 Teachers",
+            "item": [
+                {
+                    "name": "Create Teacher",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"userId\": 8,\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"Ramírez\",\n  \"email\": \"carlos.ramirez@universidad.edu\",\n  \"phone\": \"987654330\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/teachers",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "teachers"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Teachers",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/teachers",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "teachers"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Teachers with Multiple Subjects",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/teachers/multiple-subjects",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "teachers",
+                                "multiple-subjects"
+                            ]
+                        },
+                        "description": "Obtiene docentes que imparten 2 o más asignaturas"
+                    }
+                },
+                {
+                    "name": "Get Teachers with Complex Filter",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/teachers/filter-complex",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "teachers",
+                                "filter-complex"
+                            ]
+                        },
+                        "description": "Filtro complejo con AND, OR, NOT"
+                    }
+                },
+                {
+                    "name": "Get Teacher by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/teachers/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "teachers",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Teacher",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"phone\": \"999888777\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/teachers/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "teachers",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Teacher",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{base_url}}/teachers/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "teachers",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "👨‍🎓 Students",
+            "item": [
+                {
+                    "name": "Create Student - Ing. Sistemas",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"userId\": 4,\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"Rodríguez\",\n  \"email\": \"carlos.rodriguez@universidad.edu\",\n  \"phone\": \"987654323\",\n  \"careerId\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/students",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "students"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Student - Medicina",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"userId\": 7,\n  \"firstName\": \"Sofía\",\n  \"lastName\": \"González\",\n  \"email\": \"sofia.gonzalez@universidad.edu\",\n  \"phone\": \"987654325\",\n  \"careerId\": 3\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/students",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "students"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Students",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/students?page=1&limit=10",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "students"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Active Students with Career",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/students/active-with-career",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "students",
+                                "active-with-career"
+                            ]
+                        },
+                        "description": "Estudiantes activos con información completa de carrera y especialidad"
+                    }
+                },
+                {
+                    "name": "Filter Students by Career and Period",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/students/filter?careerId=1&periodId=1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "students",
+                                "filter"
+                            ],
+                            "query": [
+                                {
+                                    "key": "careerId",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "periodId",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "description": "Filtro compuesto con AND lógico"
+                    }
+                },
+                {
+                    "name": "Get Student by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/students/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "students",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Student",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"phone\": \"999888777\",\n  \"isActive\": true\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/students/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "students",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Student",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{base_url}}/students/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "students",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "👨‍🏫📖 Teacher-Subjects",
+            "item": [
+                {
+                    "name": "Assign Subject to Teacher",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"teacherId\": 1,\n  \"subjectId\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/teacher-subjects",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "teacher-subjects"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Teacher-Subjects",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/teacher-subjects",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "teacher-subjects"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Subjects by Teacher",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/teacher-subjects/teacher/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "teacher-subjects",
+                                "teacher",
+                                "1"
+                            ]
+                        },
+                        "description": "Obtiene todas las materias de un docente específico"
+                    }
+                },
+                {
+                    "name": "Get Teachers by Subject",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/teacher-subjects/subject/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "teacher-subjects",
+                                "subject",
+                                "1"
+                            ]
+                        },
+                        "description": "Obtiene todos los docentes de una materia específica"
+                    }
+                },
+                {
+                    "name": "Get Teacher-Subject by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/teacher-subjects/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "teacher-subjects",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Teacher-Subject",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"subjectId\": 2\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/teacher-subjects/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "teacher-subjects",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Teacher-Subject",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{base_url}}/teacher-subjects/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "teacher-subjects",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "👨‍🎓📖 Student-Subjects",
+            "item": [
+                {
+                    "name": "Assign Subject to Student",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"studentId\": 1,\n  \"subjectId\": 1,\n  \"grade\": 18.5,\n  \"passed\": true\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/student-subjects",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "student-subjects"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Student-Subjects",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/student-subjects",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "student-subjects"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Subjects by Student",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/student-subjects/student/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "student-subjects",
+                                "student",
+                                "1"
+                            ]
+                        },
+                        "description": "Obtiene todas las materias de un estudiante específico"
+                    }
+                },
+                {
+                    "name": "Get Students by Subject",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/student-subjects/subject/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "student-subjects",
+                                "subject",
+                                "1"
+                            ]
+                        },
+                        "description": "Obtiene todos los estudiantes de una materia específica"
+                    }
+                },
+                {
+                    "name": "Get Student-Subject by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/student-subjects/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "student-subjects",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Student-Subject (Grade)",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"grade\": 19.0,\n  \"passed\": true\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/student-subjects/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "student-subjects",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Student-Subject",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{base_url}}/student-subjects/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "student-subjects",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "📅 Academic Periods",
+            "item": [
+                {
+                    "name": "Create Academic Period",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"2026-1\",\n  \"startDate\": \"2026-03-01T00:00:00.000Z\",\n  \"endDate\": \"2026-07-31T23:59:59.999Z\",\n  \"isActive\": true\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/academic-periods",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "academic-periods"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Academic Periods",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/academic-periods",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "academic-periods"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Active Academic Periods",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/academic-periods/active",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "academic-periods",
+                                "active"
+                            ]
+                        },
+                        "description": "Obtiene solo los periodos académicos activos"
+                    }
+                },
+                {
+                    "name": "Get Academic Period by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/academic-periods/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "academic-periods",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Academic Period",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"isActive\": false\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/academic-periods/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "academic-periods",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Academic Period",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{base_url}}/academic-periods/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "academic-periods",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "📝 Enrollments (Matrículas)",
+            "item": [
+                {
+                    "name": "Enroll Student (ACID Transaction)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"studentId\": 1,\n  \"subjectId\": 1,\n  \"academicPeriodId\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/enrollments",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "enrollments"
+                            ]
+                        },
+                        "description": "Matricula un estudiante en una materia usando transacción ACID"
+                    }
+                },
+                {
+                    "name": "Get All Enrollments",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/enrollments",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "enrollments"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Enrollment Report (SQL Nativo)",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/enrollments/report",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "enrollments",
+                                "report"
+                            ]
+                        },
+                        "description": "Reporte con SQL nativo usando $queryRaw"
+                    }
+                },
+                {
+                    "name": "Get Student Enrollments by Period",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/enrollments/student/1/period/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "enrollments",
+                                "student",
+                                "1",
+                                "period",
+                                "1"
+                            ]
+                        },
+                        "description": "Obtiene todas las matrículas de un estudiante en un periodo específico"
+                    }
+                },
+                {
+                    "name": "Get Enrollment by ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/enrollments/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "enrollments",
+                                "1"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Enrollment",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{base_url}}/enrollments/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "enrollments",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:3000",
+            "type": "string"
+        },
+        {
+            "key": "access_token",
+            "value": "",
+            "type": "string"
+        }
+    ]
+}
