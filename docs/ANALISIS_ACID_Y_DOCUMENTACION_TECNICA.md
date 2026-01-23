@@ -1266,7 +1266,7 @@ Este proyecto demuestra la implementación completa de operaciones avanzadas de 
    - Aislamiento: Operaciones atómicas
    - Durabilidad: PostgreSQL WAL
 
-### Rutas Reales del Proyecto
+### Rutas del Proyecto
 
 ```
 Sistema_Uni_T1_m2/
@@ -1306,24 +1306,6 @@ Sistema_Uni_T1_m2/
     └── ANALISIS_ACID_Y_DOCUMENTACION_TECNICA.md (este archivo)
 ```
 
-### Recomendaciones Futuras
 
-1. **Optimizaciones de rendimiento:**
-   - Implementar índices en campos de filtrado frecuente
-   - Usar paginación en consultas grandes
-   - Cachear reportes con Redis
-
-2. **Seguridad adicional:**
-   - Implementar soft deletes (isDeleted) para auditoría
-   - Agregar triggers de BD para logs automáticos
-   - Rate limiting en endpoints de matriculación
-
-3. **Features avanzados:**
-   - Notificaciones cuando se agoten cupos
-   - Estadísticas en tiempo real
-   - Exportación de reportes a Excel/PDF
-
----
-
-**Documento preparado para entrega académica**  
 **Instituto Sudamericano - Enero 2026**
+**Paula Verdugo**
