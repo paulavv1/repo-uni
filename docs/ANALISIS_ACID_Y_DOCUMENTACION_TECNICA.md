@@ -93,7 +93,7 @@ En un sistema universitario, la atomicidad es **crítica** porque:
 
 **¿Qué garantiza?**
 
-La consistencia se implementa en múltiples niveles en **`src/enrollment/enrollment.service.ts`** (líneas 30-99). Garantiza que la base de datos SIEMPRE está en un estado válido:
+La consistencia se implementa en múltiples niveles en **`src/enrollment/enrollment.service.ts`** (líneas 30-99)72 . Garantiza que la base de datos SIEMPRE está en un estado válido:
 
 **Capas de Validación Implementadas:**
 
